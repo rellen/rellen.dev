@@ -1,7 +1,11 @@
-resolver: lts-14.22
+resolver: lts-19.33
 
 packages:
 - .
 
 extra-deps:
-- slick-1.0.1.1
+- slick-1.2.1.0
+- mustache-2.4.2
+
+nix:
+  enable: true

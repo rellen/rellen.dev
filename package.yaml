@@ -27,7 +27,7 @@ executables:
     dependencies:
     - base >= 4.7 && < 5
     - shake
-    - slick
+    - slick >= 1.1
     - text
     - containers
     - unordered-containers
@@ -35,3 +35,4 @@ executables:
     - aeson
     - lens-aeson
     - time
+    - mustache >=2.3

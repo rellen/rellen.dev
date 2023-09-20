@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 99608593197be2adb4aa74b31a94255716eef02a03cb55c4477261cee7cf3fc2
+-- hash: d5643254501318c6c3b45f56eb857bbe74f4966d819a1e251d5428c26ac43e73
 
 name:           slick-template
 version:        0.1.0.0
@@ -40,8 +40,9 @@ executable build-site
     , containers
     , lens
     , lens-aeson
+    , mustache >=2.3
     , shake
-    , slick
+    , slick >=1.1
     , text
     , time
     , unordered-containers
