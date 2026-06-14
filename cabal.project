@@ -1,0 +1,20 @@
+packages: .
+
+-- Specify that we want the latest Hakyll
+allow-newer: hakyll:*
+
+-- Define optimization level
+optimization: 2
+
+-- Package-specific flags
+package rellen-dev
+  documentation: True
+  benchmarks: True
+  tests: True
+
+-- Enable parallel builds by default (using 8 cores)
+jobs: 8
+
+-- Parallel module compilation within each package
+program-options
+  ghc-options: -j8
