@@ -1,1 +1,5 @@
 .direnv
+.devenv
+_cache
+dist-newstyle
+*.png
