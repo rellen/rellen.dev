@@ -8,7 +8,8 @@ args = ["lsp"]
 
 [[language]]
 name = "haskell"
-formatter = { command = "ormolu", args = ["--mode", "inplace"]}
+formatter = { command = "ormolu", args = ["--mode", "stdout", "--stdin-input-file", "./"]}
+auto-format = true
 
 [[language]]
 name = "html"
