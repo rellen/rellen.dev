@@ -9,3 +9,7 @@ args = ["lsp"]
 [[language]]
 name = "haskell"
 formatter = { command = "ormolu", args = ["--mode", "inplace"]}
+
+[[language]]
+name = "html"
+formatter = { command = "prettier" }

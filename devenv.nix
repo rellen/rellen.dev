@@ -29,6 +29,8 @@
 
     # LSPs
     haskell-language-server
+    vscode-css-languageserver
+    superhtml
 
     # Link checking
     lychee
