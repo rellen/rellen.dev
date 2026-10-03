@@ -1,13 +1,23 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Monad
 import Data.Monoid (mappend)
 import Hakyll
+import Site.Talks
 
 --------------------------------------------------------------------------------
 
 siteConfig :: Configuration
 siteConfig = defaultConfiguration {providerDirectory = "site"}
+
+siteCtx :: Context String
+siteCtx = constField "siteRoot" "https://rellen.dev" `mappend` defaultContext
+
+applyTemplateChain [] item = return item
+applyTemplateChain ((templateId, ctx) : rest) item = do
+  result <- loadAndApplyTemplate templateId ctx item
+  applyTemplateChain rest result
 
 main :: IO ()
 main = do
@@ -23,6 +33,20 @@ main = do
     match "assets/fonts/*" $ do
       route $ gsubRoute "assets/" (const "")
       compile copyFileCompiler
+
+    -- Generate talks page from Dhall data
+    create ["talks.html"] $ do
+      route idRoute
+      compile $ do
+        talks <- unsafeCompiler $ loadTalks "site/data/talks.dhall"
+        let talksPageCtx =
+              talksContext talks
+                `mappend` constField "title" "Talks"
+                `mappend` siteCtx
+
+        makeItem ""
+          >>= applyTemplateChain [("templates/talks.html", talksPageCtx), ("templates/default.html", talksPageCtx)]
+          >>= relativizeUrls
 
     match (fromList ["about.rst", "contact.markdown"]) $ do
       route $ setExtension "html"
@@ -53,7 +77,7 @@ main = do
           >>= loadAndApplyTemplate "templates/default.html" archiveCtx
           >>= relativizeUrls
 
-    match "index.html" $ do
+    match "content/index.html" $ do
       route $ gsubRoute "content/" (const "")
       compile $ do
         posts <- recentFirst =<< loadAll "content/posts/*"

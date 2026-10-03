@@ -14,6 +14,9 @@
   packages = with pkgs; [
     git
 
+    # languages
+    dhall
+
     # Formatters
     treefmt
     nixfmt
@@ -31,6 +34,7 @@
     haskell-language-server
     vscode-css-languageserver
     superhtml
+    dhall-lsp-server
 
     # Link checking
     lychee
