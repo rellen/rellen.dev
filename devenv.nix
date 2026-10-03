@@ -43,7 +43,9 @@
   # https://devenv.sh/languages/
   languages.haskell.enable = true;
   languages.haskell.stack.enable = false;
-  
+
+  languages.javascript.enable = true;
+
   # https://devenv.sh/processes/
   processes.watch = {
     exec = "cabal build && cabal exec site rebuild && cabal exec site watch";
