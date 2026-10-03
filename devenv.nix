@@ -82,7 +82,8 @@
     "cabal:install".exec = "cabal install";
     "cabal:build".exec = "cabal build";
 
-    "site:build".exec = "site build";
+    "site:build".exec = "cabal exec site build";
+    "site:rebuild".exec = "cabal exec site rebuild";
 
     #   "devenv:enterShell".after = [ "myproj:setup" ];
   };
