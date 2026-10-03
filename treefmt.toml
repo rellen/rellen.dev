@@ -1,0 +1,48 @@
+[global]
+excludes = [
+  ".vale/**",
+  "site/assets/fonts/**",
+  "site/assets/images/**",
+  "**/.gitkeep",
+  ".gitignore",
+  ".prettierrc",
+  ".vale.ini",
+  "cabal.project",
+  "rellen-dev.cabal",
+  "treefmt.toml",
+  "wrangler.toml",
+  ".lychee.toml",
+  "**/*.org",
+  "**/*.dhall",
+]
+
+[formatter.hakyll-html]
+command = "node"
+options = ["prettier-plugin-hakyll/index.js"]
+includes = ["site/templates/*.html"]
+
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+[formatter.ormolu]
+command = "ormolu"
+options = ["--mode", "inplace"]
+includes = ["*.hs", "**/*.hs"]
+
+[formatter.prettier]
+command = "prettier"
+options = ["--write"]
+includes = [
+  "*.html", "**/*.html",
+  "*.css", "**/*.css",
+  "*.md", "**/*.md",
+  "*.json", "**/*.json",
+  "*.yaml", "**/*.yaml",
+  "*.yml", "**/*.yml",
+]
+
+[formatter.shfmt]
+command = "shfmt"
+options = ["-w", "-i", "2"]
+includes = ["scripts/*"]

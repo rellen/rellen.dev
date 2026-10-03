@@ -23,6 +23,9 @@
       statix
       vale
 
+      # LSPs
+      haskell-language-server
+      
       # Link checking
       lychee
 

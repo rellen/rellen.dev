@@ -1,0 +1,11 @@
+[[language]]
+name = "nix"
+language-servers = ["devenv-lsp"]
+
+[language-server.devenv-lsp]
+command = "devenv"
+args = ["lsp"]
+
+[[language]]
+name = "haskell"
+formatter = { command = "ormolu", args = ["--mode", "inplace"]}

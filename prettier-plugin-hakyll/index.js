@@ -1,0 +1,142 @@
+"use strict";
+
+// Hakyll template-aware HTML formatter.
+//
+// Wraps prettier: protects $...$ template tags before formatting,
+// then restores them after.
+//
+// Tags in HTML attributes get a text placeholder (HAKYLL_ATTR_xxxx)
+// since you can't embed HTML elements in attribute values.
+// Tags in content get <span> placeholders to preserve inline flow.
+//
+// Usage: node prettier-plugin-hakyll/index.js [--check] file [file...]
+
+const fs = require("fs");
+const { execSync } = require("child_process");
+
+function toBase64(str) {
+  return Buffer.from(str).toString("base64");
+}
+
+function fromBase64(str) {
+  return Buffer.from(str, "base64").toString("utf8");
+}
+
+function protect(text) {
+  // First pass: protect tags inside HTML attributes with text placeholders.
+  // Match attribute="....$tag$..." patterns.
+  let result = text.replace(
+    /(=\s*"[^"]*?)\$([a-zA-Z_][a-zA-Z0-9_./"() ]*)\$([^"]*?")/g,
+    (_match, before, tagContent, after) => {
+      const encoded = toBase64("$" + tagContent + "$");
+      return `${before}HAKYLL_ATTR_${encoded}_RTTA${after}`;
+    },
+  );
+
+  // Repeat to catch multiple tags in the same attribute
+  result = result.replace(
+    /(=\s*"[^"]*?)HAKYLL_ATTR_[^"]*?\$([a-zA-Z_][a-zA-Z0-9_./"() ]*)\$([^"]*?")/g,
+    (_match, before, tagContent, after) => {
+      const encoded = toBase64("$" + tagContent + "$");
+      return `${before}HAKYLL_ATTR_${encoded}_RTTA${after}`;
+    },
+  );
+
+  // Second pass: protect remaining tags (in content) with <span> placeholders
+  result = result.replace(
+    /\$[a-zA-Z_][a-zA-Z0-9_./"() ]*\$/g,
+    (match) => `<span data-hakyll="${toBase64(match)}"></span>`,
+  );
+
+  return result;
+}
+
+function restore(text) {
+  // Restore attribute placeholders
+  let result = text.replace(
+    /HAKYLL_ATTR_([A-Za-z0-9+/=]+)_RTTA/g,
+    (_match, encoded) => fromBase64(encoded),
+  );
+
+  // Restore content placeholders (handle prettier reformatting whitespace)
+  result = result.replace(
+    /<span data-hakyll="([A-Za-z0-9+/=]+)">\s*<\/span\s*>/g,
+    (_match, encoded) => fromBase64(encoded),
+  );
+
+  // Fix prettier splitting closing ">" onto the next line
+  // e.g. '<span class="foo"\n  >' → '<span class="foo">'
+  // and '</time\n  >' → '</time>'
+  result = result.replace(/(<\/?[\w-]+(?:\s+[^>]*?)?)\s*\n\s*>/g, "$1>");
+
+  // Fix Hakyll block tags that ended up on the same line
+  // e.g. "  $endif$ $if(posts)$" → "$endif$\n  $if(posts)$"
+  // Preserve the leading indentation for the second tag
+  result = result.replace(
+    /^(\s*)\$(endif|endfor)\$\s+\$(if|for)\(/gm,
+    "$1$$$2$$\n$1$$$3(",
+  );
+
+  // Fix closing HTML tags split across lines before Hakyll tags
+  // e.g. "</span\n  >$endif$" → "</span>\n  $endif$"
+  result = result.replace(
+    /<\/(\w+)\s*\n(\s*)>\$(endif|endfor|else|sep)\$/g,
+    "</$1>\n$2$$$3$$",
+  );
+
+  return result;
+}
+
+function formatFile(filePath, check) {
+  const original = fs.readFileSync(filePath, "utf8");
+  const protected_ = protect(original);
+
+  const tmpPath = filePath + ".hakyll-tmp";
+  fs.writeFileSync(tmpPath, protected_);
+
+  try {
+    const cmd = check
+      ? `prettier --check --parser html "${tmpPath}"`
+      : `prettier --write --parser html "${tmpPath}"`;
+
+    execSync(cmd, { stdio: "pipe" });
+
+    if (!check) {
+      const formatted = fs.readFileSync(tmpPath, "utf8");
+      const restored = restore(formatted);
+
+      if (restored !== original) {
+        fs.writeFileSync(filePath, restored);
+        console.log(`formatted: ${filePath}`);
+      }
+    }
+  } catch (e) {
+    if (check) {
+      console.log(`needs formatting: ${filePath}`);
+      process.exitCode = 1;
+    } else {
+      console.error(`error formatting ${filePath}: ${e.message}`);
+      process.exitCode = 1;
+    }
+  } finally {
+    try {
+      fs.unlinkSync(tmpPath);
+    } catch (_) {}
+  }
+}
+
+// CLI
+const args = process.argv.slice(2);
+const check = args.includes("--check");
+const files = args.filter((a) => a !== "--check");
+
+if (files.length === 0) {
+  console.error(
+    "Usage: node prettier-plugin-hakyll/index.js [--check] file...",
+  );
+  process.exit(1);
+}
+
+for (const f of files) {
+  formatFile(f, check);
+}
