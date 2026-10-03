@@ -1,42 +1,46 @@
-{ pkgs, lib, config, inputs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}:
 
 {
   # https://devenv.sh/basics/
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages =
-    with pkgs;
-    [
-      git
+  packages = with pkgs; [
+    git
 
-      # Formatters
-      treefmt
-      nixfmt
-      ormolu
-      prettier
-      shfmt
+    # Formatters
+    treefmt
+    nixfmt
+    ormolu
+    prettier
+    shfmt
 
-      # Linters
-      hlint
-      deadnix
-      statix
-      vale
+    # Linters
+    hlint
+    deadnix
+    statix
+    vale
 
-      # LSPs
-      haskell-language-server
-      
-      # Link checking
-      lychee
+    # LSPs
+    haskell-language-server
 
-      # HTML5 conformance (wraps W3C Nu Validator's vnu.jar)
-      html5validator
+    # Link checking
+    lychee
 
-      # Build tools
-      imagemagick
+    # HTML5 conformance (wraps W3C Nu Validator's vnu.jar)
+    html5validator
 
-      # Deployment
-      wrangler
+    # Build tools
+    imagemagick
+
+    # Deployment
+    wrangler
 
   ];
 
@@ -51,7 +55,7 @@
     exec = "cabal build && cabal exec site rebuild && cabal exec site watch";
     watch = {
       paths = [ ./. ];
-      extensions = [ "hs"];
+      extensions = [ "hs" ];
     };
   };
 
@@ -77,8 +81,8 @@
     "cabal:build".exec = "cabal build";
 
     "site:build".exec = "site build";
-    
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
+
+    #   "devenv:enterShell".after = [ "myproj:setup" ];
   };
 
   # https://devenv.sh/tests/
