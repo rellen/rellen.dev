@@ -41,6 +41,7 @@ includes = [
   "*.yaml", "**/*.yaml",
   "*.yml", "**/*.yml",
 ]
+excludes = ["site/templates/*.html"]
 
 [formatter.shfmt]
 command = "shfmt"

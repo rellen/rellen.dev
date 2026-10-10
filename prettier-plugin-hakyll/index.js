@@ -10,9 +10,11 @@
 // Tags in content get <span> placeholders to preserve inline flow.
 //
 // Usage: node prettier-plugin-hakyll/index.js [--check] file [file...]
+//        node prettier-plugin-hakyll/index.js --stdin   (stdin -> stdout, for editors)
 
 const fs = require("fs");
-const { execSync } = require("child_process");
+const path = require("path");
+const { execFileSync } = require("child_process");
 
 function toBase64(str) {
   return Buffer.from(str).toString("base64");
@@ -87,56 +89,63 @@ function restore(text) {
   return result;
 }
 
+function formatText(text) {
+  const formatted = execFileSync("prettier", ["--parser", "html"], {
+    input: protect(text),
+    encoding: "utf8",
+    stdio: ["pipe", "pipe", "pipe"],
+    // run from the repo root so .prettierrc is found
+    cwd: path.join(__dirname, ".."),
+  });
+  return restore(formatted);
+}
+
 function formatFile(filePath, check) {
-  const original = fs.readFileSync(filePath, "utf8");
-  const protected_ = protect(original);
-
-  const tmpPath = filePath + ".hakyll-tmp";
-  fs.writeFileSync(tmpPath, protected_);
-
   try {
-    const cmd = check
-      ? `prettier --check --parser html "${tmpPath}"`
-      : `prettier --write --parser html "${tmpPath}"`;
+    const original = fs.readFileSync(filePath, "utf8");
+    const restored = formatText(original);
 
-    execSync(cmd, { stdio: "pipe" });
+    if (restored === original) return;
 
-    if (!check) {
-      const formatted = fs.readFileSync(tmpPath, "utf8");
-      const restored = restore(formatted);
-
-      if (restored !== original) {
-        fs.writeFileSync(filePath, restored);
-        console.log(`formatted: ${filePath}`);
-      }
-    }
-  } catch (e) {
     if (check) {
       console.log(`needs formatting: ${filePath}`);
       process.exitCode = 1;
     } else {
-      console.error(`error formatting ${filePath}: ${e.message}`);
-      process.exitCode = 1;
+      fs.writeFileSync(filePath, restored);
+      console.log(`formatted: ${filePath}`);
     }
-  } finally {
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch (_) {}
+  } catch (e) {
+    console.error(`error formatting ${filePath}: ${e.stderr || e.message}`);
+    process.exitCode = 1;
+  }
+}
+
+function formatStdin() {
+  try {
+    process.stdout.write(formatText(fs.readFileSync(0, "utf8")));
+  } catch (e) {
+    process.stderr.write(String(e.stderr || e.message));
+    process.exit(1);
   }
 }
 
 // CLI
 const args = process.argv.slice(2);
-const check = args.includes("--check");
-const files = args.filter((a) => a !== "--check");
 
-if (files.length === 0) {
-  console.error(
-    "Usage: node prettier-plugin-hakyll/index.js [--check] file...",
-  );
-  process.exit(1);
-}
+if (args.includes("--stdin")) {
+  formatStdin();
+} else {
+  const check = args.includes("--check");
+  const files = args.filter((a) => a !== "--check");
 
-for (const f of files) {
-  formatFile(f, check);
+  if (files.length === 0) {
+    console.error(
+      "Usage: node prettier-plugin-hakyll/index.js [--check] file... | --stdin",
+    );
+    process.exit(1);
+  }
+
+  for (const f of files) {
+    formatFile(f, check);
+  }
 }

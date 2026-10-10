@@ -32,8 +32,7 @@
 
     # LSPs
     haskell-language-server
-    vscode-css-languageserver
-    superhtml
+    vscode-langservers-extracted
     dhall-lsp-server
 
     # Link checking
@@ -71,6 +70,11 @@
   # https://devenv.sh/scripts/
   scripts.hello.exec = ''
     echo hello from $GREET
+  '';
+
+  # Hakyll-aware HTML formatter; `hakyll-fmt --stdin` is used by helix
+  scripts.hakyll-fmt.exec = ''
+    node ${config.devenv.root}/prettier-plugin-hakyll/index.js "$@"
   '';
 
   # https://devenv.sh/basics/
