@@ -18,7 +18,8 @@
     <meta property="og:description" content="$description$" />
     $else$
     <meta property="og:description" content="Rob's technical blog and ramblings" />
-    $endif$ $if(og_type)$
+    $endif$
+    $if(og_type)$
     <meta property="og:type" content="$og_type$" />
     $else$
     <meta property="og:type" content="website" />
@@ -35,15 +36,15 @@
     <link rel="preload" href="/fonts/AtkinsonHyperlegibleNext-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/AtkinsonHyperlegibleNext-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/AtkinsonHyperlegibleNext-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
-    
+
     <link rel="stylesheet" href="/css/main.css" />
   </head>
   <body>
     <header role="banner">
       <div class="logo">
         <a href="/">
-<img src="/images/logo.svg" alt="r! logo" class="logo-icon" />
-        Rob's Ramblings</a>
+          <img src="/images/logo.svg" alt="r! logo" class="logo-icon" />
+          Rob's Ramblings</a>
       </div>
       <nav>
         <a href="/">Home</a>
