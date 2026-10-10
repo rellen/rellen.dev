@@ -1,0 +1,7 @@
+@layer layout {
+  header img {
+    block-size: 1lh;
+    width: auto;
+    vertical-align: middle;
+  }
+}
