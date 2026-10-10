@@ -2,19 +2,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
     <style>
-      .logo-text { 
-        font-family: 'AtkinsonHyperlegibleNext', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', 'DejaVu Sans Mono', 'Liberation Mono', 'Courier New', monospace; 
-        font-size: 280px; 
-        font-weight: 600;
-        text-anchor: middle;
-        dominant-baseline: central;
-      }
-      
       /* Light mode (default) - Rose Pine Dawn */
       .logo-bg { fill: #f2e9e1; }
       .logo-r { fill: #56949f; }
       .logo-exclamation { fill: #ea9d34; }
-      
+
       /* Dark mode - Rose Pine Moon */
       @media (prefers-color-scheme: dark) {
         .logo-bg { fill: #393552; }
@@ -23,12 +15,11 @@
       }
     </style>
   </defs>
-  
+
   <!-- Background with rounded corners -->
   <rect class="logo-bg" width="512" height="512" rx="64" ry="64"/>
-  
-  <!-- Text with separate colors -->
-  <text class="logo-text" x="256" y="256">
-    <tspan class="logo-r">r</tspan><tspan class="logo-exclamation">!</tspan>
-  </text>
+
+  <!-- "r!" in Atkinson Hyperlegible Next SemiBold, converted to outlines -->
+  <path class="logo-r" d="M179.98 208.96H207.14L214.7 234.44Q228.42 204.76 261.46 205.6V241.16Q259.22 240.88 254.74 240.88Q234.3 240.88 224.78 250.96Q215.26 261.04 215.26 281.76V347.84H179.98Z"/>
+  <path class="logo-exclamation" d="M289.46 209.24V160.8H327.26V209.24L319.7 285.12H296.74ZM284.7 327.4Q284.7 317.6 291.7 310.6Q298.7 303.6 308.5 303.6Q318.3 303.6 325.16 310.6Q332.02 317.6 332.02 327.4Q332.02 337.2 325.16 344.2Q318.3 351.2 308.5 351.2Q298.7 351.2 291.7 344.2Q284.7 337.2 284.7 327.4Z"/>
 </svg>
