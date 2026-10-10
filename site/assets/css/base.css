@@ -9,50 +9,10 @@
 
   @font-face {
     font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 800;
-    font-style: normal;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-ExtraBold.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 200;
-    font-style: normal;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-ExtraLight.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-Light.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-Medium.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
     font-weight: 400;
     font-style: normal;
     font-display: swap;
     src: url("/fonts/AtkinsonHyperlegibleNext-Regular.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-SemiBold.woff2") format("woff2");
   }
 
   @font-face {
@@ -65,38 +25,6 @@
 
   @font-face {
     font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 800;
-    font-style: italic;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-ExtraBoldItalic.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 200;
-    font-style: italic;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-ExtraLightItalic.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 300;
-    font-style: italic;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-LightItalic.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 500;
-    font-style: italic;
-    font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-MediumItalic.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
     font-weight: 400;
     font-style: italic;
     font-display: swap;
@@ -104,11 +32,35 @@
   }
 
   @font-face {
-    font-family: "AtkinsonHyperlegibleNext";
-    font-weight: 600;
+    font-family: "AtkinsonHyperlegibleMono";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/AtkinsonHyperlegibleMono-Bold.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "AtkinsonHyperlegibleMono";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/AtkinsonHyperlegibleMono-Regular.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "AtkinsonHyperlegibleMono";
+    font-weight: 700;
     font-style: italic;
     font-display: swap;
-    src: url("/fonts/AtkinsonHyperlegibleNext-SemiBoldItalic.woff2") format("woff2");
+    src: url("/fonts/AtkinsonHyperlegibleMono-BoldItalic.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "AtkinsonHyperlegibleMono";
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+    src: url("/fonts/AtkinsonHyperlegibleMono-RegularItalic.woff2") format("woff2");
   }
 
   :root {
@@ -120,6 +72,7 @@
     /* derived perceptually — these would lie in sRGB */
     --muted: color-mix(in oklab, var(--text) 62%, var(--bg));
     --rule: color-mix(in oklab, var(--text) 18%, var(--bg));
+    --faint: color-mix(in oklab, var(--text) 8%, var(--bg));
     --link: oklch(from var(--text) l calc(c + 0.1) 245);
     --link-v: oklch(from var(--link) calc(l - 0.05) c calc(h + 60));
   }
@@ -152,8 +105,29 @@
     block-size: auto;
   }
 
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: "AtkinsonHyperlegibleMono", ui-monospace, monospace;
+    background-color: var(--faint);
+  }
+
+  code,
+  kbd,
+  samp {
+    padding: 0.1em 0.2em;
+    border-radius: 0.25em;
+    box-decoration-break: clone;
+  }
+
   pre {
     overflow-x: auto;
+  }
+
+  pre code {
+    padding: 0;
+    background: none;
   }
 
   @media (prefers-contrast: more) {

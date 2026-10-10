@@ -40,7 +40,7 @@ I am a full stack software developer with experience in generalist software deve
 - took an Elixir-based gRPC NMS telemetry collector from prototype to production, processing telemetry from 100s of devices at the edge of Telstra's networks (NBN and enterprise) on a single node, ~10 telemetry messages per device per second into ~40 metric values per device per second
 - co-developed a custom functional DSL (Domain-Specific Language) for telemetry message processing
   - dynamically-typed total language with immutable data types, closures, and strict evaluation
-  - lexer and parser written using Erlang's leex and yecc
+  - lexer and parser written using Erlang's =leex= and =yecc=
   - tree-walking interpreter with property-tested BIFs, hot-code-loading runtime
   - used by network engineers to transform telemetry data from the gRPC edge devices above into useful metrics, aligning with Telstra's push to develop self-service solutions
 - co-led the development of a new meta-data service using Elixir and Postgres resulting in 2-3 orders of magnitude speed-up for queries from client systems; was an enabler for T-Live to increase its scalability of monitored devices by at least 400%
