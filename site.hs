@@ -17,18 +17,28 @@ siteCtx =
   mconcat
     [ constField "siteRoot" "https://rellen.dev",
       cleanUrlField "cleanUrl",
+      currentField "current",
       defaultContext
     ]
 
 dropIndex fp =
   if takeFileName fp == "index.html" then dropFileName fp else fp
 
+itemRoute = getRoute . itemIdentifier
+
 cleanUrlField :: String -> Context String
-cleanUrlField key = field key $ \item ->
+cleanUrlField key = field key $ \item -> do
   let id = itemIdentifier item
       empty' = fail $ "No route url found for item " ++ show id
-      url = getRoute id
-   in fmap (maybe empty' (dropIndex . toUrl)) url
+  (maybe empty' (dropIndex . toUrl)) <$> (itemRoute item)
+
+currentField :: String -> Context String
+currentField key = functionField key $ \args item ->
+  case args of
+    [href] -> do
+      url <- maybe "" (dropIndex . toUrl) <$> (itemRoute item)
+      return (if href == url then "page" else "false")
+    _ -> fail "current: expected one argument"
 
 postCtx :: Context String
 postCtx =
