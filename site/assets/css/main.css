@@ -1,4 +1,5 @@
-@layer base, layout;
+@layer base, layout, components;
 
 @import url("./base.css");
 @import url("./layout.css");
+@import url("./components.css");

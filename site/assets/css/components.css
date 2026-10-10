@@ -1,0 +1,32 @@
+@layer components {
+  body > header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+  }
+
+  body > header > a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  body > header > a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  body > header > a > img {
+    block-size: 1lh;
+    inline-size: auto;
+    vertical-align: middle;
+  }
+
+  body > header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+}

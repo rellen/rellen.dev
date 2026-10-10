@@ -134,6 +134,19 @@
     hanging-punctuation: first last;
   }
 
+  a:link {
+    color: var(--link);
+  }
+  a:visited {
+    color: var(--link-v);
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+  a:active {
+    color: var(--text);
+  }
+
   img {
     max-inline-size: 100%;
     block-size: auto;
