@@ -35,6 +35,9 @@
     vscode-langservers-extracted
     dhall-lsp-server
 
+    # language tools
+    haskellPackages.hoogle
+
     # Link checking
     lychee
 
