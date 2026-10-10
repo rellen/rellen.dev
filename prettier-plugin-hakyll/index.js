@@ -26,23 +26,15 @@ function fromBase64(str) {
 
 function protect(text) {
   // First pass: protect tags inside HTML attributes with text placeholders.
-  // Match attribute="....$tag$..." patterns.
-  let result = text.replace(
-    /(=\s*"[^"]*?)\$([a-zA-Z_][a-zA-Z0-9_./"() ]*)\$([^"]*?")/g,
-    (_match, before, tagContent, after) => {
-      const encoded = toBase64("$" + tagContent + "$");
-      return `${before}HAKYLL_ATTR_${encoded}_RTTA${after}`;
-    },
-  );
-
-  // Repeat to catch multiple tags in the same attribute
-  result = result.replace(
-    /(=\s*"[^"]*?)HAKYLL_ATTR_[^"]*?\$([a-zA-Z_][a-zA-Z0-9_./"() ]*)\$([^"]*?")/g,
-    (_match, before, tagContent, after) => {
-      const encoded = toBase64("$" + tagContent + "$");
-      return `${before}HAKYLL_ATTR_${encoded}_RTTA${after}`;
-    },
-  );
+  // Rewrite every tag within each attrib="..." value, so adjacent tags
+  // like "$siteRoot$$url$" are all kept.
+  let result = text.replace(/(=\s*")([^"]*)(")/g, (_match, open, value, close) => {
+    const protectedValue = value.replace(
+      /\$[a-zA-Z_][a-zA-Z0-9_./() ]*\$/g,
+      (tag) => `HAKYLL_ATTR_${toBase64(tag)}_RTTA`,
+    );
+    return `${open}${protectedValue}${close}`;
+  });
 
   // Second pass: protect remaining tags (in content) with <span> placeholders
   result = result.replace(
