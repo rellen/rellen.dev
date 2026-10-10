@@ -14,24 +14,31 @@ siteConfig = defaultConfiguration {providerDirectory = "site"}
 siteCtx :: Context String
 siteCtx = constField "siteRoot" "https://rellen.dev" `mappend` defaultContext
 
+postCtx :: Context String
+postCtx =
+  dateField "date" "%B %e, %Y"
+    `mappend` siteCtx
+
 applyTemplateChain [] item = return item
 applyTemplateChain ((templateId, ctx) : rest) item = do
   result <- loadAndApplyTemplate templateId ctx item
   applyTemplateChain rest result
 
+assetsRoute = route $ gsubRoute "assets/" (const "")
+
 main :: IO ()
 main = do
   hakyllWith siteConfig $ do
-    match "images/*" $ do
-      route $ gsubRoute "assets/" (const "")
+    match "assets/images/*" $ do
+      assetsRoute
       compile copyFileCompiler
 
     match "assets/css/*.css" $ do
-      route $ gsubRoute "assets/" (const "")
+      assetsRoute
       compile compressCssCompiler
 
     match "assets/fonts/*" $ do
-      route $ gsubRoute "assets/" (const "")
+      assetsRoute
       compile copyFileCompiler
 
     -- Generate talks page from Dhall data
@@ -70,7 +77,7 @@ main = do
         let archiveCtx =
               listField "posts" postCtx (return posts)
                 `mappend` constField "title" "Archives"
-                `mappend` defaultContext
+                `mappend` siteCtx
 
         makeItem ""
           >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -83,7 +90,7 @@ main = do
         posts <- recentFirst =<< loadAll "content/posts/*"
         let indexCtx =
               listField "posts" postCtx (return posts)
-                `mappend` defaultContext
+                `mappend` siteCtx
 
         getResourceBody
           >>= applyAsTemplate indexCtx
@@ -93,7 +100,3 @@ main = do
     match "templates/*" $ compile templateBodyCompiler
 
 --------------------------------------------------------------------------------
-postCtx :: Context String
-postCtx =
-  dateField "date" "%B %e, %Y"
-    `mappend` defaultContext
