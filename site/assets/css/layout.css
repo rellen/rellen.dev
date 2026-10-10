@@ -1,5 +1,30 @@
 @layer layout {
-  header img {
+  body {
+    max-inline-size: 65ch;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  body > header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+  }
+
+  body > header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  main > ol {
+    list-style: none;
+    padding-inline-start: 0;
+  }
+
+  header > a > img {
     block-size: 1lh;
     width: auto;
     vertical-align: middle;

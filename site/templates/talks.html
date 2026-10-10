@@ -2,46 +2,31 @@
 
 <p>Here are some talks I've given at various conferences and meetups:</p>
 
-<section class="talks-list">
+<ol reversed role="list">
   $for(talks)$
-  <article class="talk">
-    <header class="talk-header">
-      <h2 class="talk-title">$title$</h2>
-      <div class="talk-meta">
-        <span class="talk-organisation">$organisation$</span>
-        <span class="talk-date">$date$</span>
-      </div>
-    </header>
+  <li>
+    <h2>$title$</h2>
+    <p>
+      $organisation$ &middot;
+      <time datetime="$isoDate$">$formattedDate$</time>
+    </p>
 
-    <div class="talk-description">$description$</div>
+    $description$
 
-    $if(hasVideo)$ $if(hasSlides)$
-    <div class="talk-links">
-      <a href="$videoUrl$" class="talk-link video-link" target="_blank" rel="noopener">
-        <span class="link-icon">▶</span>
+    <p>
+      $if(videoUrl)$
+      <a href="$videoUrl$">
+        <span aria-hidden="true">▶</span>
         Watch Video
       </a>
-      <a href="$slidesUrl$" class="talk-link slides-link" target="_blank" rel="noopener">
-        <span class="link-icon">📖</span>
+      $endif$
+      $if(slidesUrl)$
+      <a href="$slidesUrl$">
+        <span aria-hidden="true">📖</span>
         View Slides
       </a>
-    </div>
-    $else$
-    <div class="talk-links">
-      <a href="$videoUrl$" class="talk-link video-link" target="_blank" rel="noopener">
-        <span class="link-icon">▶</span>
-        Watch Video
-      </a>
-    </div>
-    $endif$ $else$
-    $if(hasSlides)$
-    <div class="talk-links">
-      <a href="$slidesUrl$" class="talk-link slides-link" target="_blank" rel="noopener">
-        <span class="link-icon">📖</span>
-        View Slides
-      </a>
-    </div>
-    $endif$ $endif$
-  </article>
+      $endif$
+    </p>
+  </li>
   $endfor$
-</section>
+</ol>

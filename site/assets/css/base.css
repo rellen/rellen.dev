@@ -127,11 +127,20 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: "AtkinsonHyperlegibleNext", ui-sans-serif;
+    font-family: "AtkinsonHyperlegibleNext", ui-sans-serif, system-ui, sans-serif;
     font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
     line-height: 1.6;
     text-wrap: pretty;
     hanging-punctuation: first last;
+  }
+
+  img {
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  pre {
+    overflow-x: auto;
   }
 
   @media (prefers-contrast: more) {

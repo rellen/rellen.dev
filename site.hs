@@ -53,14 +53,12 @@ main = do
 
         makeItem ""
           >>= applyTemplateChain [("templates/talks.html", talksPageCtx), ("templates/default.html", talksPageCtx)]
-          >>= relativizeUrls
 
     match (fromList ["content/about.org"]) $ do
       route $ gsubRoute "content/" (const "") `composeRoutes` setExtension "html"
       compile $
         pandocCompiler
           >>= loadAndApplyTemplate "templates/default.html" siteCtx
-          >>= relativizeUrls
 
     match "posts/*" $ do
       route $ setExtension "html"
@@ -68,7 +66,6 @@ main = do
         pandocCompiler
           >>= loadAndApplyTemplate "templates/post.html" postCtx
           >>= loadAndApplyTemplate "templates/default.html" postCtx
-          >>= relativizeUrls
 
     create ["archive.html"] $ do
       route idRoute
@@ -82,7 +79,6 @@ main = do
         makeItem ""
           >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
           >>= loadAndApplyTemplate "templates/default.html" archiveCtx
-          >>= relativizeUrls
 
     match "content/index.html" $ do
       route $ gsubRoute "content/" (const "")
@@ -95,7 +91,6 @@ main = do
         getResourceBody
           >>= applyAsTemplate indexCtx
           >>= loadAndApplyTemplate "templates/default.html" indexCtx
-          >>= relativizeUrls
 
     match "templates/*" $ compile templateBodyCompiler
 

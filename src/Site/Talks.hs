@@ -11,6 +11,7 @@ import GHC.Generics
 import Hakyll
 import Numeric.Natural (Natural)
 import Text.Pandoc (def, readMarkdown, runPure, writeHtml5String)
+import Text.Printf (printf)
 
 data Talk = Talk
   { title :: T.Text,
@@ -63,11 +64,10 @@ talkItemContext =
       talkOrganisationField,
       talkYearField,
       talkMonthField,
-      talkDateField,
+      talkYearMonthField,
+      talkFormattedDateField,
       talkVideoField,
-      talkSlidesField,
-      talkHasVideoField,
-      talkHasSlidesField
+      talkSlidesField
     ]
 
 talkTitleField = field "title" (return . T.unpack . title . itemBody)
@@ -80,12 +80,17 @@ talkYearField = field "year" (return . show . year . itemBody)
 
 talkMonthField = field "month" (return . show . month . itemBody)
 
-talkDateField = field "date" (\item -> return $ formatDate (year $ itemBody item) (month $ itemBody item))
+talkYearMonthField = field "isoDate" $ \item ->
+  let t = itemBody item
+   in return (printf "%d-%02d" (year t) (month t))
 
-talkVideoField = field "videoUrl" (return . T.unpack . fromMaybe T.empty . video . itemBody)
+talkFormattedDateField = field "formattedDate" $ \item ->
+  let t = itemBody item
+   in return $ formatDate (year t) (month t)
 
-talkSlidesField = field "slidesUrl" (return . T.unpack . fromMaybe T.empty . slides . itemBody)
+talkVideoField = field "videoUrl" (optionalField . video . itemBody)
 
-talkHasVideoField = field "hasVideo" (\item -> return $ if T.null (fromMaybe T.empty $ video $ itemBody item) then "false" else "true")
+talkSlidesField = field "slidesUrl" (optionalField . slides . itemBody)
 
-talkHasSlidesField = field "hasSlides" (\item -> return $ if T.null (fromMaybe T.empty $ slides $ itemBody item) then "false" else "true")
+optionalField :: Maybe T.Text -> Compiler String
+optionalField = maybe (noResult "not set") (return . T.unpack)
