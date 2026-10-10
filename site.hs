@@ -5,6 +5,7 @@ import Control.Monad
 import Data.Monoid (mappend)
 import Hakyll
 import Site.Talks
+import System.FilePath (dropFileName, takeFileName)
 
 --------------------------------------------------------------------------------
 
@@ -12,11 +13,27 @@ siteConfig :: Configuration
 siteConfig = defaultConfiguration {providerDirectory = "site"}
 
 siteCtx :: Context String
-siteCtx = constField "siteRoot" "https://rellen.dev" `mappend` defaultContext
+siteCtx =
+  mconcat
+    [ constField "siteRoot" "https://rellen.dev",
+      cleanUrlField "cleanUrl",
+      defaultContext
+    ]
+
+dropIndex fp =
+  if takeFileName fp == "index.html" then dropFileName fp else fp
+
+cleanUrlField :: String -> Context String
+cleanUrlField key = field key $ \item ->
+  let id = itemIdentifier item
+      empty' = fail $ "No route url found for item " ++ show id
+      url = getRoute id
+   in fmap (maybe empty' (dropIndex . toUrl)) url
 
 postCtx :: Context String
 postCtx =
   dateField "date" "%B %e, %Y"
+    `mappend` constField "og_type" "article"
     `mappend` siteCtx
 
 applyTemplateChain [] item = return item
