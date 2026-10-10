@@ -48,11 +48,11 @@ main = do
           >>= applyTemplateChain [("templates/talks.html", talksPageCtx), ("templates/default.html", talksPageCtx)]
           >>= relativizeUrls
 
-    match (fromList ["about.rst", "contact.markdown"]) $ do
-      route $ setExtension "html"
+    match (fromList ["content/about.org"]) $ do
+      route $ gsubRoute "content/" (const "") `composeRoutes` setExtension "html"
       compile $
         pandocCompiler
-          >>= loadAndApplyTemplate "templates/default.html" defaultContext
+          >>= loadAndApplyTemplate "templates/default.html" siteCtx
           >>= relativizeUrls
 
     match "posts/*" $ do
